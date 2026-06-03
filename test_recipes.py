@@ -32,3 +32,58 @@ def test_ingredient_quantity_positive():
     ingredient = Ingredient("Черемша", 200.0, "кг")
     with pytest.raises(ValueError):
         ingredient.quantity = -52
+
+def test_recipe_title():
+    ingredients = [Ingredient("Черемша", 200.0, "кг"), Ingredient("Стекловата", 67, "т"), Ingredient("Семга", 52, "кг"), Ingredient("Брдыщ", 42, "кг"), Ingredient("Тихо", 1488, "т"), Ingredient("Не спеша", 666, "т")]
+    recipe = Recipe("СССР", ingredients)
+    assert recipe.title == "СССР"
+
+def test_recipe_len():
+    ingredients = [Ingredient("Черемша", 200.0, "кг"), Ingredient("Стекловата", 67, "т"), Ingredient("Семга", 52, "кг"), Ingredient("Брдыщ", 42, "кг"), Ingredient("Тихо", 1488, "т"), Ingredient("Не спеша", 666, "т")]
+    recipe = Recipe("СССР", ingredients)
+    assert len(recipe.ingredients) == 6
+
+def test_recipe_ingredients():
+    ingredients = [Ingredient("Черемша", 200.0, "кг"), Ingredient("Стекловата", 67, "т"), Ingredient("Семга", 52, "кг"), Ingredient("Брдыщ", 42, "кг"), Ingredient("Тихо", 1488, "т"), Ingredient("Не спеша", 666, "т")]
+    recipe = Recipe("СССР", ingredients)
+    assert recipe.ingredients[0].name == "Черемша"
+
+def test_recipe_creation_empty_ingredients():
+    recipe = Recipe("Черемша")
+    assert recipe.title == "Черемша"
+    assert recipe.ingredients == []
+
+def test_recipe_add_ingredient_new():
+    recipe = Recipe("СССР")
+    ingredients = [Ingredient("Черемша", 200.0, "кг"), Ingredient("Стекловата", 67, "т")]
+    recipe.add_ingredient(Ingredient("Семга", 52, "кг"))
+    assert len(recipe) == 3
+    assert recipe.ingredients[2].name == "Семга"
+    assert recipe.ingredients[2].quantity == 52
+
+def test_recipe_add_ingredient_existing():
+    recipe = Recipe("CCCР")
+    recipe.add_ingredient(Ingredient("Черемша", 200, "кг"))
+    recipe.add_ingredient(Ingredient("Черемша", 1288, "кг"))
+    assert len(recipe) == 1
+    assert recipe.ingredients[0].quantity == 1488
+
+def test_recipe_is_valid_ratio():
+    assert Recipe.is_valid_ratio(52) == True
+    assert Recipe.is_valid_ratio(7.8) == True
+    assert Recipe.is_valid_ratio(0) == False
+    assert Recipe.is_valid_ratio(-228) == False
+    assert Recipe.is_valid_ratio("six seven") == False
+
+def test_recipe_len():
+    recipe = Recipe("СССР")
+    recipe.add_ingredient(Ingredient("Черемша", 200, "кг"))
+    recipe.add_ingredient(Ingredient("Стекловата", 67, "т"))
+    recipe.add_ingredient(Ingredient("Черемша", 200, "кг"))
+    assert len(recipe) == 2
+
+def test_recipe_str():
+    recipe = Recipe("СССР", [Ingredient("Черемша", 200.0, "кг"), Ingredient("Стекловата", 67, "т"), Ingredient("Семга", 52, "кг"), Ingredient("Брдыщ", 42, "кг"), Ingredient("Тихо", 1488, "т"), Ingredient("Не спеша", 666, "т")])
+    result = str(recipe)
+    assert "Рецепт: СССР" in result
+    assert "Черемша: 200.0 кг" in result
