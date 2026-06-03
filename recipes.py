@@ -1,16 +1,16 @@
 class Ingredient:
     def __init__(self, name: str, quantity: float, unit: str):
         self.name = name
-        self.quantity = float(quantity)
+        self._quantity = float(quantity)
     @property
     def quantity(self):
-        return self.quantity
+        return self._quantity
     @quantity.setter
     def quantity(self, value):
         value = float(value)
         if value <= 0:
             raise ValueError("Количество должно быть положительным")
-        self.quantity = value
+        self._quantity = value
     def __str__(self):
         return f"{self.name}:{self.quantity} {self.unit}"
     def __repr__(self):
@@ -62,3 +62,32 @@ class Recipe:
         for ing in self.ingredients:
             result = result + "\n  - " + str(ing)
         return result
+
+class ShoppingList:
+    def __init__(self):
+        self._items = []
+        if portions<= 0:
+            raise ValueError("Количество порций должно быть положительным")
+        scaled_recipe = recipe.scale(portions)
+        for ing in scaled_recipe.ingredients:
+            self._items.append((ing, recipe.title))
+    def remove_recipe(self, title):
+        new_items = []
+        for i in range(len(self._items)):
+            item = self._items[i]
+            recipe_title = item[1]
+            if recipe_title != title:
+                new_items.append(item)
+        self._items = new_items
+    def get_list(self):
+        aggregated = {}
+        for i in range(len(self._items)):
+            item = self._items[i]
+            ingredient = item[0]    
+            key = (ingredient.name, ingredient.unit)
+            if key in aggregated:
+                aggregated[key]+= ingredient.quantity
+            else:
+                aggregated[key] = ingredient.quantity
+        result = []
+  
