@@ -19,22 +19,28 @@
 ```bash
 git clone https://github.com/reypoluc/HW2
 cd HW2
+```
 ## 2. Установка зависимостей
+```
 pip install -r requirements.txt
+```
 ## 3. Запуск тестов
+```
 pytest test_recipes.py -v
+```
 ## 4. Демонстрация работы
+
 python recipes.py
 ```
 # Структура проекта
-
+```
 text
 ├── recipes.py          # Реализация классов
 ├── test_recipes.py     # Тесты pytest
 ├── requirements.txt    # Зависимости
 ├── README.md           # Описание проекта
 └── .gitignore          # Игнорируемые файлы
-
+```
 ## Задание выполнила:
 Ермолаева Полина Ивановна ББИ2504
 
