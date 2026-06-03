@@ -109,3 +109,20 @@ class ShoppingList:
             new_shopping_list._items.append(item)
         return new_shopping_list
 
+class DietaryRecipe(Recipe):
+    def __init__(self, title, diet_type, ingredients=None):
+        Recipe.__init__(self, title, ingredients)
+        self.diet_type = diet_type
+    def scale(self, ratio):
+        if self.is_valid_ratio(ratio) == False:
+            raise ValueError("Коэффициент масштабирования должен быть положительным ")
+        new_ingredients = []
+        for ing in self.ingredients:
+            new_q = ing.quantity*ratio
+            new_ingredients.append(Ingredient(ing.name, new_q, ing.unit))
+        return DietaryRecipe(self.title, self.diet_type, new_ingredients)
+    def __str__(self):
+        result = "["+self.diet_type+ "] Рецепт: "+ self.title
+        for ing in self.ingredients:
+            result = result + "\n  - " + str(ing)
+        return result
