@@ -19,20 +19,11 @@
 ```bash
 git clone https://github.com/reypoluc/HW2
 cd HW2
-```
 ## 2. Установка зависимостей
-```
-bash
 pip install -r requirements.txt
-```
 ## 3. Запуск тестов
-```
-bash
 pytest test_recipes.py -v
-```
 ## 4. Демонстрация работы
-```
-bash
 python recipes.py
 ```
 # Структура проекта
