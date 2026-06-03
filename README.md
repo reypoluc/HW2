@@ -29,10 +29,10 @@ pip install -r requirements.txt
 pytest test_recipes.py -v
 ```
 ## 4. Демонстрация работы
-
+```
 python recipes.py
 ```
-# Структура проекта
+## Структура проекта
 ```
 text
 ├── recipes.py          # Реализация классов
