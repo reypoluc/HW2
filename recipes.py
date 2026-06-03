@@ -90,4 +90,22 @@ class ShoppingList:
             else:
                 aggregated[key] = ingredient.quantity
         result = []
-  
+        for key in aggregated:
+            name = key[0]
+            unit = key[1]
+            quantity = aggregated[key]
+            result.append(Ingredient(name, quantity, unit))
+        result.sort(key=lambda x: x.name)
+        return result
+    def __add__(self, other):
+        if type(other) != ShoppingList:
+            raise TypeError("Можно складывать только ShoppingList")
+        new_shopping_list = ShoppingList()
+        for i in range(len(self._items)):
+            item = self._items[i]
+            new_shopping_list._items.append(item)
+        for i in range(len(other._items)):
+            item = other._items[i]
+            new_shopping_list._items.append(item)
+        return new_shopping_list
+
