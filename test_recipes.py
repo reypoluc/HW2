@@ -57,9 +57,9 @@ def test_recipe_add_ingredient_new():
     recipe = Recipe("СССР")
     ingredients = [Ingredient("Черемша", 200.0, "кг"), Ingredient("Стекловата", 67, "т")]
     recipe.add_ingredient(Ingredient("Семга", 52, "кг"))
-    assert len(recipe) == 3
-    assert recipe.ingredients[2].name == "Семга"
-    assert recipe.ingredients[2].quantity == 52
+    assert len(recipe) == 1
+    assert recipe.ingredients[0].name == "Семга"
+    assert recipe.ingredients[0].quantity == 52
 
 def test_recipe_add_ingredient_existing():
     recipe = Recipe("CCCР")
@@ -87,3 +87,36 @@ def test_recipe_str():
     result = str(recipe)
     assert "Рецепт: СССР" in result
     assert "Черемша: 200.0 кг" in result
+
+def test_recipe_scale_does_not_change_original():
+    original = Recipe("СССР", [Ingredient("Черемша", 200.0, "кг")])
+    original_quantity = original.ingredients[0].quantity
+    scaled = original.scale(3)
+    assert original.ingredients[0].quantity == original_quantity
+    assert original.ingredients[0] is not scaled.ingredients[0] 
+
+def test_recipe_add_ingredient_same_name_different_unit():
+    recipe = Recipe("СССР")
+    recipe.add_ingredient(Ingredient("Черемша", 6, "кг"))
+    recipe.add_ingredient(Ingredient("Черемша", 7, "т"))
+    assert len(recipe) == 2
+    assert recipe.ingredients[0].name == "Черемша"
+    assert recipe.ingredients[0].unit == "кг"
+    assert recipe.ingredients[1].unit == "т"
+
+def test_recipe_is_valid_ratio_edge_cases():
+    assert Recipe.is_valid_ratio(0.00000000148822852426778) == True 
+    assert Recipe.is_valid_ratio(True) == True 
+    assert Recipe.is_valid_ratio(False) == False 
+    assert Recipe.is_valid_ratio(None) == False  
+    assert Recipe.is_valid_ratio([6,7]) == False 
+
+def test_recipe_scale_with_float_ratio():
+    recipe = Recipe("СССР", [Ingredient("Черемша", 200.0, "кг")])
+    scaled = recipe.scale(0.5)  
+    assert scaled.ingredients[0].quantity == 100.0
+
+def test_recipe_add_ingredient_zero_quantity():
+    with pytest.raises(ValueError):
+        Ingredient("Черемша", 0, "кг")
+        
