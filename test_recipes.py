@@ -120,3 +120,71 @@ def test_recipe_add_ingredient_zero_quantity():
     with pytest.raises(ValueError):
         Ingredient("Черемша", 0, "кг")
 
+def test_shoppinglist_get_list_same_ingredient_same_recipe():
+    sl = ShoppingList()
+    recipe = Recipe("СССР")
+    recipe.add_ingredient(Ingredient("Черемша", 200, "кг"))
+    recipe.add_ingredient(Ingredient("Черемша", 1288, "кг"))
+    sl.add_recipe(recipe, 1)
+    result = sl.get_list()
+    assert len(result) == 1
+    assert result[0].name == "Черемша"
+    assert result[0].quantity == 1488
+
+def test_shoppinglist_remove_recipe_multiple_entries():
+    sl = ShoppingList()
+    recipe = Recipe("СССР", [Ingredient("Черемша", 200, "кг")])
+    sl.add_recipe(recipe, 1)
+    sl.add_recipe(recipe, 2)
+    assert len(sl._items) == 2
+    sl.remove_recipe("СССР")
+    assert len(sl._items) == 0
+
+def test_shoppinglist_get_list_sorting_order():
+    sl = ShoppingList()
+    sl.add_recipe(Recipe("Рецепт1", [Ingredient("Черемша", 200, "кг")]), 1)
+    sl.add_recipe(Recipe("Рецепт2", [Ingredient("Стекловата", 67, "т")]), 1)
+    sl.add_recipe(Recipe("Рецепт3", [Ingredient("Семга", 52, "кг")]), 1)
+    sl.add_recipe(Recipe("Рецепт4", [Ingredient("Брдыщ", 42, "кг")]), 1)
+    sl.add_recipe(Recipe("Рецепт5", [Ingredient("Тихо", 1488, "т")]), 1)
+    sl.add_recipe(Recipe("Рецепт6", [Ingredient("Не спеша", 666, "т")]), 1)
+    result = sl.get_list()
+    names = [ing.name for ing in result]
+    assert names == sorted(names)
+
+def test_shoppinglist_get_list_no_duplicates_after_aggregation():
+    sl = ShoppingList()
+    r1 = Recipe("Рецепт1", [Ingredient("Черемша", 200, "кг")])
+    r2 = Recipe("Рецепт2", [Ingredient("Черемша", 300, "кг")])
+    r3 = Recipe("Рецепт3", [Ingredient("Черемша", 400, "кг")])
+    sl.add_recipe(r1, 1)
+    sl.add_recipe(r2, 1)
+    sl.add_recipe(r3, 1)
+    result = sl.get_list()
+    черемша_count = 0
+    for ing in result:
+        if ing.name == "Черемша":
+            черемша_count += 1
+    assert черемша_count == 1
+    assert result[0].quantity == 900
+
+def test_shoppinglist_remove_recipe_nonexistent():
+    sl = ShoppingList()
+    recipe = Recipe("СССР", [Ingredient("Черемша", 200, "кг")])
+    sl.add_recipe(recipe, 1)
+    sl.remove_recipe("Брдыщ")
+    assert len(sl._items) == 1
+    assert sl._items[0][0].name == "Черемша"
+
+def test_shoppinglist_get_list_empty():
+    sl = ShoppingList()
+    result = sl.get_list()
+    assert result == []
+
+def test_shoppinglist_add_recipe_with_dietary():
+    sl = ShoppingList()
+    dietary = DietaryRecipe("СССР", "Черемшовая диета", [Ingredient("Черемша", 200, "кг")])
+    sl.add_recipe(dietary, 2)
+    assert len(sl._items) == 1
+    assert sl._items[0][0].quantity == 400
+    assert sl._items[0][1] == "СССР"
