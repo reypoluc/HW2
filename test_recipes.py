@@ -75,7 +75,7 @@ def test_recipe_is_valid_ratio():
     assert Recipe.is_valid_ratio(-228) == False
     assert Recipe.is_valid_ratio("six seven") == False
 
-def test_recipe_len():
+def test_recipe_len_after_add_ingredient():
     recipe = Recipe("СССР")
     recipe.add_ingredient(Ingredient("Черемша", 200, "кг"))
     recipe.add_ingredient(Ingredient("Стекловата", 67, "т"))
@@ -119,4 +119,4 @@ def test_recipe_scale_with_float_ratio():
 def test_recipe_add_ingredient_zero_quantity():
     with pytest.raises(ValueError):
         Ingredient("Черемша", 0, "кг")
-        
+
