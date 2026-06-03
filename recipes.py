@@ -2,6 +2,7 @@ class Ingredient:
     def __init__(self, name: str, quantity: float, unit: str):
         self.name = name
         self._quantity = float(quantity)
+        self.unit = unit 
     @property
     def quantity(self):
         return self._quantity
@@ -12,9 +13,9 @@ class Ingredient:
             raise ValueError("Количество должно быть положительным")
         self._quantity = value
     def __str__(self):
-        return f"{self.name}:{self.quantity} {self.unit}"
+        return f"{self.name}: {self.quantity} {self.unit}"
     def __repr__(self):
-        return f"Ingredient('{self.name}',{self.quantity},'{self.unit}')"
+        return f"Ingredient('{self.name}', {self.quantity}, '{self.unit}')"
     def __eq__(self, other):
         if not isinstance(other, Ingredient):
             return False
@@ -66,7 +67,9 @@ class Recipe:
 class ShoppingList:
     def __init__(self):
         self._items = []
-        if portions<= 0:
+
+    def add_recipe(self, recipe, portions):
+        if portions <= 0:
             raise ValueError("Количество порций должно быть положительным")
         scaled_recipe = recipe.scale(portions)
         for ing in scaled_recipe.ingredients:
